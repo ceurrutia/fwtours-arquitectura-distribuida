@@ -12,7 +12,7 @@ Este proyecto es un ejemplo de arquitectura distribuida con microservicios desar
 
 ## Tecnologías usadas
 
-- Java 17
+- Java 21
 - Spring Boot 3.x
 - Spring Cloud Config
 - Eureka Discovery
