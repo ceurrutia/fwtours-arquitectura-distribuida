@@ -1,5 +1,7 @@
 package com.urrutia.user_service.controller;
 
+import com.urrutia.user_service.dto.LoginRequestDTO;
+import com.urrutia.user_service.dto.LoginResponseDTO;
 import com.urrutia.user_service.dto.UserRegistrationDTO;
 import com.urrutia.user_service.dto.UserResponseDTO;
 import com.urrutia.user_service.service.UserService;
@@ -18,12 +20,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    //crear usuario
-    @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRegistrationDTO registrationDTO) {
-        UserResponseDTO newUser = userService.registerUser(registrationDTO);
-        return ResponseEntity.ok(newUser);
-    }
 
     //listar todos
     @GetMapping
@@ -37,6 +33,13 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         UserResponseDTO user = userService.findUserById(id);
         return ResponseEntity.ok(user);
+    }
+
+    //registra usuario
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRegistrationDTO registrationDTO) {
+        UserResponseDTO newUser = userService.registerUser(registrationDTO);
+        return ResponseEntity.ok(newUser);
     }
 
     //update usuario
@@ -64,5 +67,23 @@ public class UserController {
 
         UserResponseDTO updatedUser = userService.updateRole(id, role);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    //metodo para el auth
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserResponseDTO> getUserByEmail(@PathVariable String email) {
+        UserResponseDTO user = userService.findUserByEmail(email);
+        return ResponseEntity.ok(user);
+    }
+
+    //login
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginDTO) {
+        try {
+            LoginResponseDTO resp = userService.login(loginDTO.getEmail(), loginDTO.getPassword());
+            return ResponseEntity.ok(resp);
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.status(401).build();
+        }
     }
 }
